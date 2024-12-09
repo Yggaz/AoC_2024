@@ -27,12 +27,11 @@ def correct_one(t: tuple) -> tuple:
     return tuple(res)
 
 
-f_in = open('input_05.txt', 'r', encoding='utf-8')
 # rules is a dictionary. Key is the FOLLOWING item, value is a list of
 # possible preceding items. 21|97 adds 21 to the list of possible preceding values for 97
 rules = {}
 reps = []
-for ln in f_in:
+for ln in open('input_05.txt', 'r', encoding='utf-8'):
     rule = ln.split('|')
     if len(rule) == 2:
         if not rules.get(int(rule[1])):
@@ -42,7 +41,6 @@ for ln in f_in:
         rep = ln.split(',')
         if len(rep) > 1:
             reps.append(tuple(map(int, rep)))
-f_in.close()
 s = 0
 ss = 0
 for r in reps:
