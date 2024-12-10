@@ -1,20 +1,27 @@
-def adjacent(v: int, cur: set) -> set:
+def adjacent(v: int, cur: dict) -> dict:
     global N
-    res = set()
+    res = {}
     vv = str(v + 1)
-    for t in cur:
-        dx1 = t[0] - 1 if t[0] > 0 else t[0]
-        dx2 = t[0] + 1 if t[0] < N - 1 else t[0]
-        dy1 = t[1] - 1 if t[1] > 0 else t[1]
-        dy2 = t[1] + 1 if t[1] < N - 1 else t[1]
-        if tMap[t[0]][dy1] == vv:
-            res.add(tuple((t[0],dy1)))
-        if tMap[t[0]][dy2] == vv:
-            res.add(tuple((t[0],dy2)))
-        if tMap[dx1][t[1]] == vv:
-            res.add(tuple((dx1,t[1])))
-        if tMap[dx2][t[1]] == vv:
-            res.add(tuple((dx2,t[1])))
+    for t in cur.keys():
+        x = t[0]
+        y = t[1]
+        r = cur.get(t, 0)
+        dx1 = x - 1 if x > 0 else x
+        dx2 = x + 1 if x < N - 1 else x
+        dy1 = y - 1 if y > 0 else y
+        dy2 = y + 1 if y < N - 1 else y
+        if tMap[x][dy1] == vv:
+            tt = tuple((x, dy1))
+            res[tt] = res.get(tt, 0) + r
+        if tMap[x][dy2] == vv:
+            tt = tuple((x, dy2))
+            res[tt] = res.get(tt, 0) + r
+        if tMap[dx1][y] == vv:
+            tt = tuple((dx1, y))
+            res[tt] = res.get(tt, 0) + r
+        if tMap[dx2][y] == vv:
+            tt = tuple((dx2, y))
+            res[tt] = res.get(tt, 0) + r
     return res
 
 heads = {}
@@ -25,12 +32,22 @@ for i, ln in enumerate(open('input_10.txt', 'r', encoding='utf-8')):
         if ln[j] == "0":
             heads[tuple((i,j))] = 0
 N = len(tMap)
+# k = tuple((0, 2))
+# curP = {}
+# curP[k] = 0
+# curP = adjacent(0, curP)
+# for kk in curP.keys():
+#     print(kk, curP[kk])
 s = 0
+s1 = 0
 for k in heads.keys():
-    curP = set()
-    curP.add(k)
+    curP = {}
+    curP[k] = 1
     for curV in range(9):
         curP = adjacent(curV, curP)
+    for kk in curP.keys():
+        s1 += curP[kk]
     heads[k] = len(curP)
     s += len(curP)
 print(s)
+print(s1)
