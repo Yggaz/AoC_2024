@@ -32,12 +32,6 @@ for i, ln in enumerate(open('input_10.txt', 'r', encoding='utf-8')):
         if ln[j] == "0":
             heads[tuple((i,j))] = 0
 N = len(tMap)
-# k = tuple((0, 2))
-# curP = {}
-# curP[k] = 0
-# curP = adjacent(0, curP)
-# for kk in curP.keys():
-#     print(kk, curP[kk])
 s = 0
 s1 = 0
 for k in heads.keys():
