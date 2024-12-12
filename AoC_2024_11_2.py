@@ -24,9 +24,11 @@ for c in open('input_11.txt', 'r', encoding='utf-8'):
     stones = list(map(int, c.strip().split()))
     for s in stones:
         sDict[s] = sDict.get(s, 0) + 1
-for j in range(75):
+blinks = 75
+for j in range(blinks):
     sDict = nextG(sDict)
-print("total keys: %6d" % len(sDict.keys()))
+print("Blinks: %4d total keys: %4d" % (blinks, len(sDict.keys())))
 s = sum(sDict[k] for k in sDict.keys())
 print("Total stones", s)
+print("(%2d digits)" % (int(math.log10(s)) + 1))
 print("Total time: %s seconds" % round(time() - t, 3))
