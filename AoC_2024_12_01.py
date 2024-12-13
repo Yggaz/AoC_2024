@@ -1,10 +1,10 @@
-class region:
-    def __init__(self, t, x, y):
+class Region:
+    def __init__(self, t, xx, yy):
         self.plant_type = t
         self.plants = set()
-        self.plants.add((i, j))
-        touched.add((i, j))
-        curLayer = self.plants
+        self.plants.add((xx, yy))
+        touched.add((xx, yy))
+        cur_layer = self.plants
         self.tBorders = {}
         self.bBorders = {}
         self.lBorders = {}
@@ -13,7 +13,7 @@ class region:
         while len(self.plants) - prev > 0:
             prev = len(self.plants)
             tmp = set()
-            for c in curLayer:
+            for c in cur_layer:
                 x, y = c
                 if x > 0:
                     if farm[x - 1][y] == t:
@@ -47,7 +47,7 @@ class region:
                         self.rBorders[(x, y)] = 2
                 else:
                     self.rBorders[(x, y)] = 2
-            curLayer = tmp
+            cur_layer = tmp
             self.plants = self.plants.union(tmp)
         for k in self.tBorders.keys():
             x, y = k
@@ -108,7 +108,7 @@ for ln in open('input_12.txt', 'r', encoding='utf-8'):
 for i in range(N):
     for j in range(N):
         if (i, j) not in touched:
-            r = region(farm[i][j], i, j)
+            r = Region(farm[i][j], i, j)
             regions.append(r)
 res = sum (reg.surface() * reg.perimeter() for reg in regions)
 res2 = sum (reg.surface() * reg.cnt_sides() for reg in regions)
