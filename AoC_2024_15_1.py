@@ -41,7 +41,6 @@ for i, ln in enumerate(open('input_15.txt', 'r', encoding='utf-8')):
     if len(lin) == 0:
         read_maze = False
     if read_maze:
-        size += 1
         for j in range(len(lin)):
             if lin[j] == "#":
                 walls.add((i, j))
