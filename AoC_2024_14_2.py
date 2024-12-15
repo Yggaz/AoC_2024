@@ -27,7 +27,7 @@ class Robots:
     def pict(self):
         image = Image.new("RGB", (self.H, self.W), (0, 0, 0))
         draw = ImageDraw.Draw(image)
-        name = "./images14/" + str(self.ticks).zfill(5) + ".png"
+        name = "./" + str(self.ticks).zfill(5) + ".png"
         for r in self.robots:
             draw.point((r.x, r.y), (255,255,255))
         image.save(name, "PNG")
@@ -79,7 +79,7 @@ class Robots:
 
 
 start_time = time()
-allR = Robots(103, 101, 5, 50000)
+allR = Robots(103, 101, 1, 10000)
 for ln in open('input_14.txt', 'r', encoding='utf-8'):
     lin = ln.split()
     ps = lin[0].split(",")
