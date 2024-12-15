@@ -1,5 +1,4 @@
 def blocked(x, y, dx, dy) -> bool:
-    res = False
     if (x + dx, y + dy) in walls:
         res = True
     elif (x + dx, y + dy) in boxes_l:
@@ -36,8 +35,6 @@ def blocked_box(n, dx, dy) -> bool:
             if ind != n:
                 res = res or blocked_box(ind, dx, dy)
     return res
-
-
 
 def move_robot(cmd):
     if cmd == "^":
