@@ -5,7 +5,6 @@ for ln in open('input_2021_11.txt', 'r', encoding='utf-8'):
     lin = list(map(int, ln.split(',')))
     for f in lin:
         fish[f] += 1
-# N = 80
 N = 256
 for i in range(N):
     tmp = fish[0]
