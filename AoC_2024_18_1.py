@@ -1,16 +1,14 @@
 import heapq
-N = 70
-part_1_limit = 1024
-wall_list = []
-walls = set()
-for i, ln in enumerate(open('input_18.txt', 'r', encoding='utf-8')):
-    wl = tuple(map(int, ln.strip().split(',')))
-    wall_list.append(wl)
-    if i < part_1_limit:
-        walls.add(wl)
-exit_reachable = True
-step = part_1_limit - 1
-while exit_reachable:
+
+def get_walls(how_many: int) -> set:
+    tmp = set()
+    for s in range(how_many):
+        tmp.add(wall_list[s])
+    return tmp
+
+def blocked(how_many) -> bool:
+    global N, part_1_limit
+    walls = get_walls(how_many)
     done = set()
     pos = (0, 0)
     finish = (N, N)
@@ -32,11 +30,22 @@ while exit_reachable:
             heapq.heappush(q, (cost + 1, (x, y - 1)))
         if y < N and (x, y+1) not in walls:
             heapq.heappush(q, (cost + 1, (x, y + 1)))
-    exit_reachable = pos == finish
-    if step == part_1_limit - 1:
-        print('Part 1 answer:', cost)
-    if exit_reachable:
-        step += 1
-        walls.add(wall_list[step])
+    if how_many == part_1_limit:
+        print('Part 1 answer: %d' % cost)
+    return pos == finish
+
+N = 70
+part_1_limit = 1024
+wall_list = []
+for ln in open('input_18.txt', 'r', encoding='utf-8'):
+    wall_list.append(tuple(map(int, ln.strip().split(','))))
+reachable = part_1_limit
+blocked(reachable)
+unreachable = len(wall_list)
+while reachable + 1 < unreachable:
+    tst = (reachable + unreachable) // 2
+    if blocked(tst):
+        reachable = tst
     else:
-        print('Part 2 answer: %d,%d'% (wall_list[step][0], wall_list[step][1]))
+        unreachable = tst
+print('Part 2 answer: %d,%d' % (wall_list[reachable][0], wall_list[reachable][1]))
