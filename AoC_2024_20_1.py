@@ -69,4 +69,3 @@ for step in path:
         effective +=2
 print("Part 1 answer:", effective)
 print("Elapsed time: %s seconds" % round(time() - start_time, 3))
-
