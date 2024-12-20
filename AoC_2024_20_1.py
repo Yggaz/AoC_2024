@@ -1,5 +1,3 @@
-import heapq
-from copy import deepcopy
 from time import time
 
 def draw_maze():
@@ -19,9 +17,10 @@ def draw_maze():
                 maze_line += "."
         print(maze_line)
 
-
 start_time = time()
-walls, path = set(), set()
+limit = 100
+walls = set()
+path = []
 data = open('input_20.txt', 'r', encoding='utf-8').read()
 for x, line in enumerate(data.split()):
     for y, c in enumerate(line.strip()):
@@ -30,30 +29,44 @@ for x, line in enumerate(data.split()):
             case 'S': source = (x, y)
             case 'E': target = (x,y)
 N = x + 1
-done = set()
-cost = 0
-path = [source]
-que = [(cost, source, path)]
-while que:
-    cost, pos, path = heapq.heappop(que)
-    if pos == target:
+path.append(source)
+cur = source
+while cur != target:
+    x, y = cur
+    if (x - 1, y) not in walls and (x - 1, y) not in path:
+        cur = (x - 1, y)
+    elif (x + 1, y) not in walls and (x + 1, y) not in path:
+        cur = (x + 1, y)
+    elif (x, y - 1) not in walls and (x, y - 1) not in path:
+        cur = (x, y - 1)
+    elif (x, y + 1) not in walls and (x, y + 1) not in path:
+        cur = (x, y + 1)
+    else:
         break
-    if pos in done:
-        continue
-    done.add(pos)
-    x, y = pos
-    tmp = deepcopy(path)
-    tmp.append(pos)
-    if (x - 1, y) not in walls:
-        heapq.heappush(que, (cost + 1, (x - 1, y), tmp))
-    if (x + 1, y) not in walls:
-        heapq.heappush(que, (cost + 1, (x + 1, y), tmp))
-    if (x, y - 1) not in walls:
-        heapq.heappush(que, (cost + 1, (x, y - 1), tmp))
-    if (x, y + 1) not in walls:
-        heapq.heappush(que, (cost + 1, (x, y + 1), tmp))
-base_cost = cost
-draw_maze()
-print('Target cost with all walls', base_cost)
+    path.append(cur)
+base_cost = len(path) - 1
+print('Сost with all walls', base_cost)
+effective = 0
+for step in path:
+    x, y = step
+    pos1 = path.index(step)
+    if (x+2, y) in path and path.index((x+2, y)) - pos1 > limit + 1:
+        effective +=1
+    if (x-2, y) in path and path.index((x-2, y)) - pos1 > limit + 1:
+        effective +=1
+    if (x, y+2) in path and path.index((x, y+2)) - pos1 > limit + 1:
+        effective +=1
+    if (x, y-2) in path and path.index((x, y-2)) - pos1 > limit + 1:
+        effective +=1
+
+    if (x+1, y+1) in path and path.index((x+1, y+1)) - pos1 > limit + 1:
+        effective +=2
+    if (x-1, y-1) in path and path.index((x-1, y-1)) - pos1 > limit + 1:
+        effective +=2
+    if (x+1, y-1) in path and path.index((x+1, y-1)) - pos1 > limit + 2:
+        effective +=2
+    if (x-1, y+1) in path and path.index((x-1, y+1)) - pos1 > limit + 2:
+        effective +=2
+print("Part 1 answer:", effective)
 print("Elapsed time: %s seconds" % round(time() - start_time, 3))
 

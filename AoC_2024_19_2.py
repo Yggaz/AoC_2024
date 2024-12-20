@@ -27,4 +27,5 @@ cnt = 0
 for d in designs:
     s += how_many(d)
 print("Part 2 answer:", s)
+print(how_many.cache_info())
 print("Elapsed time: %s seconds" % round(time() - start_time, 3))
