@@ -31,13 +31,24 @@ while cur != target:
 base_cost = len(path) - 1
 print('Сost with all walls', base_cost)
 effective = 0
+best = 0
+xfrom, yfrom = source
+xto, yto = source
 for c, step in enumerate(path):
+    if len(path) - c < eff_limit:
+        break
     if c > 0 and c % 100 == 0:
         print('Processed nodes:', c)
     x, y = step
     for k in [(xx, yy) for (xx, yy) in path if 0 < abs(xx-x)+abs(yy-y) <= cheat_limit]:
         xb, yb = k
-        if path.index(k) - (abs(xb - x)+abs(yb - y)) - c >= eff_limit:
+        short = path.index(k) - (abs(xb - x)+abs(yb - y)) - c
+        if short >= eff_limit:
             effective += 1
+            if short > best:
+                best = short
+                xfrom, xfrom = step
+                xto, yto = k
 print("Part 2 answer:", effective)
+print('Best shortcut: from (%d,%d) to (%d,%d). Cost: %d, effect: %d' % (xfrom, yfrom, xto, yto,abs(xfrom - xto)+abs(yfrom - yto) ,best))
 print("Elapsed time: %s seconds" % round(time() - start_time, 3))
