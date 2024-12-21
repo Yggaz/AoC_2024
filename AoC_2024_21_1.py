@@ -1,6 +1,7 @@
 # 208126 is too high
 # 205950 is not right
 # 202870 is too low
+from functools import cache
 numpad = {
     '7': [('8', '>'), ('4', 'v')],
     '8': [('7', '<'), ('5', 'v'), ('9', '>')],
@@ -26,44 +27,56 @@ direct = {
 
 def find_paths(start, stop, pad):
     q = [(start, '')]
-    done = {start}
-    shortest = None
+    shortest = 100 # will be enough
     res = []
     while q:
+        # take from the beginning
         cur, path = q.pop(0)
-        done.add(cur)
         if cur == stop:
-            if shortest is None:
+            if shortest > len(path):
+                # new best length
                 shortest = len(path)
+                res = []
             if len(path) == shortest:
+                # add current path
                 res.append(path + 'A')
             continue
-        if shortest and len(path) >= shortest:
+        if len(path) >= shortest:
             continue
-        for nei, d in pad[cur]:
-            done.add(nei)
-            q.append((nei, path + d))
+        for neighbour, step in pad[cur]:
+            # add to the end
+            q.append((neighbour, path + step))
     return res
 
-def decode(cod, level, cpad):
+@cache
+def decode(code, level, pad_name):
+    if pad_name == 'numpad':
+        pad = numpad
+    elif pad_name == 'direct':
+        pad = direct
     res = 0
-    cod = "A" + cod
-    for i in range(len(cod) - 1):
-        start, stop = cod[i], cod[i + 1]
-        paths = find_paths(start, stop, cpad)
+    code = 'A' + code
+    for i in range(len(code) - 1):
+        start, stop = code[i], code[i + 1]
+        paths = find_paths(start, stop, pad)
         if level == 0:
             res += min(map(len, paths))
         else:
-            res += min(decode(path, level - 1, direct) for path in paths)
+            res += min(decode(path, level - 1, 'direct') for path in paths)
     return res
 
 data = open('input_21.txt', 'r', encoding='utf-8').read()
 answer1 = 0
+answer2 = 0
 for i, code in enumerate(data.split()):
     print(code)
-    l1 = decode(code, 2, numpad)
+    l1 = decode(code, 2, 'numpad')
+    l2 = decode(code, 25, 'numpad')
     part1 = int(code[:-1])
     print('%d * %d = %d' % (l1, part1, l1 * part1))
     answer1 += l1 * part1
+    print('%d * %d = %d' % (l2, part1, l2 * part1))
+    answer2 += l2 * part1
 print('Part 1 answer:', answer1)
-
+print('Part 2 answer:', answer2)
+print(decode.cache_info())
