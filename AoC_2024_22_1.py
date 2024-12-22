@@ -1,41 +1,33 @@
-from functools import cache
-@cache
-def mix(m: int, s: int) -> int:
-    return m ^ s
-
-@cache
-def prune(p: int) -> int:
-    return p % 16777216
-
-@cache
-def step(n: int) -> int:
-    # Calculate the result of multiplying the secret number by 64.
-    s1 = n << 6
-    # Then, mix this result into the secret number.
-    s2 = mix(n, s1)
-    # Finally, prune the secret number.
-    s3 = prune(s2)
-    # Calculate the result of dividing the secret number by 32. Round the result down to the nearest integer.
-    s4 = s3 // 32
-    # Then, mix this result into the secret number.
-    s5 = mix(s3, s4)
-    # Finally, prune the secret number.
-    s6 = prune(s5)
-    # Calculate the result of multiplying the secret number by 2048.
-    s7 = s6 * 2048
-    # Then, mix this result into the secret number.
-    s8 = mix(s7, s6)
-    # Finally, prune the secret number.
-    s9 = prune(s8)
-    return s9
-
+from time import time
+start_time = time()
 answer1 = 0
 data = open('input_22.txt', 'r', encoding='utf-8').read()
-first_numbers = list(map(int, data.splitlines()))
-print(first_numbers[0])
-print(len(first_numbers))
-for ss in first_numbers:
-    for i in range (2000):
-        ss = step(ss)
+results = dict()
+for m, ss in enumerate(list(map(int, data.splitlines()))):
+    # 5 last prices for current merchant
+    price = []
+    # sequences that existed for the current merchant
+    seen = set()
+    # four initial secret numbers
+    for i in range(4):
+        s1 = (ss ^ (ss << 6)) & 16777215
+        s2 = (s1 ^ (s1 >> 5)) & 16777215
+        ss = (s2 ^ (s2 << 11)) & 16777215
+        price.append(ss % 10)
+    # from now on we can track changes
+    for i in range (4, 2000):
+        s1 = (ss ^ (ss << 6)) & 16777215
+        s2 = (s1 ^ (s1 >> 5)) & 16777215
+        ss = (s2 ^ (s2 << 11)) & 16777215
+        price.append(ss % 10) # price[4] is the last
+        chg = (price[1] - price[0], price[2] - price[1], price[3] - price[2], price[4] - price[3])
+        price.pop(0) # price[3] is the last
+        if chg not in seen:
+            # first time current merchant meets this 4-change
+            results[chg] = results.get(chg, 0) + price[3]
+            seen.add(chg)
     answer1 +=ss
-print(answer1)
+print('Part 1 answer: ', answer1)
+answer2 = max(results[k] for k in results.keys())
+print('Part 2 answer: ', answer2)
+print("Elapsed time: %s seconds" % round(time() - start_time, 3))
