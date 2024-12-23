@@ -1,7 +1,8 @@
 from itertools import combinations
 data = open('input_23.txt', 'r', encoding='utf-8').read().splitlines()
 connections = dict()
-three = list()
+computers = []
+three = []
 for ln in data:
     fir, sec = ln.split('-')
     if sec not in connections.get(fir,[]):
