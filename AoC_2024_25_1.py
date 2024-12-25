@@ -6,7 +6,7 @@ for i, block in enumerate(data):
     cnt = [0, 0, 0, 0, 0]
     for j in range(1, 6):
         for p in range(5):
-            cnt[p] += 1 if lines[j][p] == '#' else 0
+            cnt[p] += lines[j][p] == '#'
     if lines[0] == '.....':
         keys.append(cnt)
     else:
@@ -14,7 +14,5 @@ for i, block in enumerate(data):
 fits = 0
 for l in locks:
     for k in keys:
-        tmp = [sum(x) for x in zip(l, k)]
-        if max(tmp) <= 5:
-            fits += 1
+        fits += max([a + b for a, b in zip(l, k)]) <= 5
 print('Part 1 answer: ', fits)
