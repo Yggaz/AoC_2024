@@ -1,3 +1,5 @@
+from itertools import product
+from operator import add
 locks = []
 keys = []
 data = open('input_25.txt', 'r', encoding='utf-8').read().split('\n\n')
@@ -12,7 +14,6 @@ for i, block in enumerate(data):
     else:
         locks.append(cnt)
 fits = 0
-for l in locks:
-    for k in keys:
-        fits += max([a + b for a, b in zip(l, k)]) <= 5
+for l, k in product(locks, keys):
+    fits += max([a + b for a, b in zip(l, k)]) <= 5
 print('Part 1 answer: ', fits)
